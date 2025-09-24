@@ -1,3 +1,4 @@
+import argparse
 import pandas as pd
 import numpy as np
 from typing import Dict, List, Tuple
@@ -78,6 +79,41 @@ class YogurtCoreFeatureEngine:
             )
         }
 
+    def standardize_column_names(self, df: pd.DataFrame) -> pd.DataFrame:
+        """
+        Standardize column names to match expected format
+        Handles variations in naming conventions
+        """
+        column_mapping = {
+            'VITAMIN A POWDER Palmitate CWS GF': 'VITAMIN_A_POWDER',
+            'VITAMIN D3 POWDER CWS Food Grade': 'VITAMIN_D3_POWDER',
+            'RO Water (SFG)': 'RO_Water_SFG',
+            'Past. Milk Cow FF': 'Past_Milk_Cow_FF',
+            'Past. Milk at 2.4% Fat for Mixing': 'Past_Milk_2_4_Fat',
+            'Past. Milk Cow SKM': 'Past_Milk_Cow_SKM',
+            'Sugar Crystal ICUMSA 45': 'Sugar_Crystal_ICUMSA_45',
+            'Strawberry Flavouring': 'Strawberry_Flavouring',
+            'Flavour Chocolate': 'Flavour_Chocolate',
+            'COMPOUND COCOA': 'COMPOUND_COCOA',
+            'Solid Milk Conc 100% AUSFIN (SFG)': 'Solid_Milk_Conc_100',
+            'SKIMMED MILK POWDER': 'SKIMMED_MILK_POWDER',
+            'WHOLE MILK POWDER': 'WHOLE_MILK_POWDER',
+            'FROZEN CREAM': 'FROZEN_CREAM',
+            'RO Water': 'RO_Water',
+            'Red Color': 'Red_Color'
+        }
+        
+        # Apply column name mapping if columns exist
+        df_renamed = df.rename(columns=column_mapping)
+        
+        # Fill missing ingredient columns with zeros (not used in this batch)
+        expected_columns = list(column_mapping.values()) + ['Stabilizer', 'AMF', 'CULTURE', 'EMULSIFIER']
+        for col in expected_columns:
+            if col not in df_renamed.columns:
+                df_renamed[col] = 0.0
+                
+        return df_renamed
+    
     def compute_protein_core_features(self, df: pd.DataFrame) -> pd.DataFrame:
         """
         Compute core protein features with highest target correlations
@@ -429,24 +465,9 @@ class YogurtCoreFeatureEngine:
             DataFrame with core engineered features
         """
         
-        # Standardize column names (handle variations)
-        df_processed = df.copy()
-        
-        # Column name mappings for common variations
-        column_mapping = {
-            'Past. Milk Cow FF': 'Past_Milk_Cow_FF',
-            'Past. Milk at 2.4% Fat for Mixing': 'Past_Milk_2_4_Fat',
-            'Past. Milk Cow SKM': 'Past_Milk_Cow_SKM',
-            'Sugar Crystal ICUMSA 45': 'Sugar_Crystal_ICUMSA_45',
-            'Strawberry Flavouring': 'Strawberry_Flavouring',
-            'Flavour Chocolate': 'Flavour_Chocolate',
-            'COMPOUND COCOA': 'COMPOUND_COCOA',
-            'Solid Milk Conc 100% AUSFIN (SFG)': 'Solid_Milk_Conc_100',
-            'Red Color': 'Red_Color'
-        }
-        
-        df_processed = df_processed.rename(columns=column_mapping)
-        
+        # Standardize column names
+        df_processed = self.standardize_column_names(df.copy())
+                
         # Apply core feature engineering
         df_processed = self.compute_protein_core_features(df_processed)
         df_processed = self.compute_fat_core_features(df_processed)
@@ -622,9 +643,15 @@ def main():
     # Initialize core feature engineer
     core_engineer = YogurtCoreFeatureEngine()
     
-    # Example usage
-    # df = pd.read_csv('yogurt_data.csv')
-    # df_with_core_features = core_engineer.engineer_core_features(df)
+    parser = argparse.ArgumentParser(description='Yogurt Feature Engineering')
+    parser.add_argument('--input_excel', type=str, required=True, default='', help='Path to input XL file with yogurt data')
+    parser.add_argument('--output_csv', type=str, default='./data/Recipe_yogurt_data_generated_with_core_features.csv', help='Path to output CSV file with engineered features')
+    args = parser.parse_args()
+    df = pd.read_excel(args.input_excel)
+    
+    # Engineer core features
+    df_with_core_features = core_engineer.engineer_core_features(df)
+    df_with_core_features.to_csv(args.output_csv, index=False)
     
     # Get optimized feature sets for each target
     target_features = core_engineer.get_features_by_target()

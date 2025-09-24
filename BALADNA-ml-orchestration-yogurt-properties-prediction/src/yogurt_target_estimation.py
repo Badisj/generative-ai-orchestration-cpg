@@ -1,11 +1,14 @@
 import pandas as pd
 import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
 from typing import Dict, List, Tuple, Optional
 from dataclasses import dataclass
 import warnings
 from scipy import stats
 from sklearn.preprocessing import StandardScaler
 import random
+import argparse
 
 @dataclass
 class TargetCorrelation:
@@ -241,7 +244,7 @@ class RealisticYogurtTargetEstimator:
         """
         
         # Primary predictors
-        acidification = df.get('acidification_adjusted', 0) + 0.01
+        acidification = df.get('acidification_potential', 0) + 0.01
         substrate_quality = df.get('culture_substrate_quality', 1)
         buffering = df.get('pH_buffering_capacity', 1) + 0.01
         
@@ -629,7 +632,7 @@ class RealisticYogurtTargetEstimator:
         validation_pairs = {
             'pH_evolution': ['acidification_potential', 'substrate_quality', 'pH_buffering_capacity'],
             'viscosity': ['texture_synergy_score', 'protein_network_strength', 'fat_total'],
-            'fermentation_endpoint_minutes': ['acidification_adjusted', 'culture_substrate_quality'],
+            'fermentation_endpoint_minutes': ['acidification_potential', 'culture_substrate_quality'],
             'fat_globule_size_um': ['homog_energy_density', 'initial_globule_size_weighted'],
             'color_L_star': ['fat_total', 'COMPOUND_COCOA'],
             'graininess_perception': ['consumer_graininess_perception', 'fat_globule_size_um'],
@@ -698,12 +701,18 @@ def main():
     # Initialize estimator
     estimator = RealisticYogurtTargetEstimator(random_seed=42)
     
-    # Example usage (requires engineered features dataframe)
-    # df_features = pd.read_csv('yogurt_features_engineered.csv') 
-    # df_with_targets = estimator.estimate_all_targets(df_features)
+    parser = argparse.ArgumentParser(description='Yogurt Feature Engineering')
+    parser.add_argument('--input_csv', type=str, required=True, default='', help='Path to input XL file with yogurt data')
+    parser.add_argument('--output_csv', type=str, required=False, default='./data/processed/Recipe_yogurt_data_generated_with_all_features_and_targets.csv', help='Path to output CSV file with estimated targets')
+    args = parser.parse_args()
+    
+    # Estimate targets (requires engineered features dataframe)
+    df_features = pd.read_csv(args.input_csv)
+    df_with_targets = estimator.estimate_all_targets(df_features)
+
     # validation_results = estimator.validate_correlations(df_with_targets)
-    # report = estimator.generate_summary_report(df_with_targets)
-    # print(report)
+    report = estimator.generate_summary_report(df_with_targets)
+    print(report)
     
     print("\nTarget correlation parameters loaded:")
     for name, params in estimator.target_correlations.items():
@@ -711,6 +720,23 @@ def main():
     
     print(f"\nEstimator ready for {len(estimator.target_correlations)} targets")
     print("Use: estimator.estimate_all_targets(your_engineered_features_df)")
+
+    # Compute and display correlation matrix
+    correlation_matrix = df_with_targets.select_dtypes(include=[np.number]).corr()
+    correlation_matrix = correlation_matrix.dropna(how='all').dropna(axis=1, how='all')
+
+    # Identify columns with nan correlations
+    cols_nan = correlation_matrix.isna().sum()
+    print(f"\nDropping {len(cols_nan)} columns with NaN correlations: {cols_nan}")
+
+    # Keep columns with valid correlations
+    df_with_targets = df_with_targets[correlation_matrix.columns]
+    df_with_targets.to_csv(args.output_csv, index=False)
+
+    print("\nSaving Correlation matrix of estimated targets:")
+    sns.heatmap(correlation_matrix, annot=False, fmt=".2f", cmap='Blues', cbar=True)
+    plt.title("Correlation Matrix of Estimated Yogurt Targets")
+    plt.savefig('./data/processed/yogurt_targets_correlation_matrix.png', dpi=1200, bbox_inches='tight')
 
 if __name__ == "__main__":
     main()

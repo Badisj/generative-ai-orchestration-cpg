@@ -1,7 +1,9 @@
 import pandas as pd
 import numpy as np
+import argparse
 import warnings
 from typing import Dict, List, Optional
+
 
 class YogurtFeatureEngineer:
     """
@@ -615,6 +617,7 @@ class YogurtFeatureEngineer:
         return descriptions
 
 
+
 def main():
     """
     Example usage of the YogurtFeatureEngineer class
@@ -624,10 +627,15 @@ def main():
     feature_engineer = YogurtFeatureEngineer()
     
     # Load your data (example)
-    # df = pd.read_csv('your_yogurt_data.csv')
-    
+    parser = argparse.ArgumentParser(description='Yogurt Feature Engineering')
+    parser.add_argument('--input_excel', type=str, required=True, default='', help='Path to input CSV file with yogurt data')
+    parser.add_argument('--output_csv', type=str, default='./data/Recipe_yogurt_data_generated_with_all_features.csv', help='Path to output CSV file with engineered features')
+    args = parser.parse_args()
+    df = pd.read_excel(args.input_excel)
+ 
     # Engineer all features
-    # df_with_features = feature_engineer.engineer_all_features(df)
+    df_with_features = feature_engineer.engineer_all_features(df)
+    df_with_features.to_csv(args.output_csv, index=False)
     
     # Get feature groups for model building
     feature_groups = feature_engineer.get_feature_groups()

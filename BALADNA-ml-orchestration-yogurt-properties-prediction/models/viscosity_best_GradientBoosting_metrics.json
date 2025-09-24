@@ -1,0 +1,13 @@
+{
+    "RMSE": 120.93620876347555,
+    "MAE": 17.948379143882768,
+    "R2": 0.9910005612323239,
+    "best_params": {
+        "model__learning_rate": 0.0158704633925133,
+        "model__max_depth": 14,
+        "model__min_samples_split": 4,
+        "model__n_estimators": 490,
+        "model__subsample": 0.5939775931836743
+    },
+    "best_score_cv": 117.34487751412577
+}
