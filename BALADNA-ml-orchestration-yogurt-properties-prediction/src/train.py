@@ -33,7 +33,7 @@ from sklearn.svm import SVR
 from sklearn.metrics import root_mean_squared_error, mean_absolute_error, r2_score
 
 from skopt import BayesSearchCV
-from skl2onnx import convert_sklearn
+from skl2onnx import convert_sklearn, to_onnx
 from skl2onnx.common.data_types import FloatTensorType
 
 
@@ -104,9 +104,10 @@ def load_data(path, targets):
 # ------------------------------
 def save_model_to_onnx(model, X, outpath):
     n_features = X.shape[1]
-    initial_type = [("float_input", FloatTensorType([None, n_features]))]
+    #initial_type = [("float_input", FloatTensorType([None, n_features]))]
     try:
-        onnx_model = convert_sklearn(model, initial_types=initial_type)
+        # onnx_model = convert_sklearn(model, initial_types=initial_type)
+        onnx_model = to_onnx(model, X[:1].astype(np.float32), target_opset={"": 20, "ai.onnx.ml": 4})
         with open(outpath, "wb") as f:
             f.write(onnx_model.SerializeToString())
         logger.info(f"ONNX model saved: {outpath}")
@@ -155,7 +156,7 @@ def get_model_spaces(random_state=42):
         ),
 
         "LightGBM": (
-        LGBMRegressor(random_state=random_state),
+        LGBMRegressor(random_state=random_state, verbose=0),
         {
             "model__n_estimators": (200, 2000),
             "model__learning_rate": (1e-3, 0.5, "log-uniform"),
