@@ -1,10 +1,10 @@
 {
-    "RMSE": 127.0379185637256,
-    "MAE": 19.33595563462326,
-    "R2": 0.9900695377262752,
+    "RMSE": 700.0559032281628,
+    "MAE": 506.7449361877432,
+    "R2": 0.9247517317054159,
     "best_params": {
-        "model__max_depth": 25,
-        "model__n_estimators": 494
+        "model__max_depth": 15,
+        "model__n_estimators": 927
     },
-    "best_score_cv": 115.52934509068564
+    "best_score_cv": 699.8262220638313
 }

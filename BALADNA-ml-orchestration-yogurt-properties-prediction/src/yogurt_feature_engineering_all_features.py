@@ -51,11 +51,11 @@ class YogurtFeatureEngineer:
         self.process_params = {
             'heat_treatment_temp': 93.5,  # °C (midpoint of 92-95°C)
             'heat_treatment_time': 300,   # seconds
-            'homog_pressure_1': 200,      # bar
-            'homog_pressure_2': 45,       # bar
-            'homog_temp': 65.5,           # °C (midpoint of 63-68°C)
+            'Homogenization_Pressure_Primary_Bar': 200,      # bar
+            'Homogenization_Pressure_Secondary_Bar': 45,       # bar
+            'Homogenization_Temperature_Min_C': 65.5,           # °C (midpoint of 63-68°C)
             'outlet_temp_target': 4.0,    # °C
-            'flow_rate': 30               # KL
+            'Flow_Rate_KL': 30               # KL
         }
         
         # Casein:whey ratios for different sources
@@ -87,6 +87,7 @@ class YogurtFeatureEngineer:
             'FROZEN CREAM': 'FROZEN_CREAM',
             'RO Water': 'RO_Water',
             'Red Color': 'Red_Color'
+
         }
         
         # Apply column name mapping if columns exist
@@ -309,25 +310,25 @@ class YogurtFeatureEngineer:
         
         # Heat treatment features
         df['pasteurization_intensity'] = (
-            (self.process_params['heat_treatment_temp'] - 72) * 
-            self.process_params['heat_treatment_time'] / 15
+            ((df['Heat_Temperature_Min_C'] + df['Heat_Temperature_Max_C'])*0.5 - 72) * 
+            df['Heat_Time_s'] / 15
         )
         
         # Homogenization features
         df['homog_energy_density'] = (
-            (self.process_params['homog_pressure_1'] + self.process_params['homog_pressure_2']) * 
-            self.process_params['flow_rate']
+            (df['Homogenization_Pressure_Primary_Bar'] + df['Homogenization_Pressure_Secondary_Bar']) * 
+            df['Flow_Rate_KL']
         )
         
-        df['pressure_ratio'] = (self.process_params['homog_pressure_1'] / 
-                               self.process_params['homog_pressure_2'])
+        df['pressure_ratio'] = (df['Homogenization_Pressure_Primary_Bar'] / 
+                               df['Homogenization_Pressure_Secondary_Bar'])
         
         # Process efficiency indicators
         df['process_energy_total'] = (
             df['pasteurization_intensity'] * 0.5 +
             df['homog_energy_density'] * 0.0003 +
-            abs(self.process_params['outlet_temp_target'] - self.process_params['homog_temp']) * 2
-        )
+            abs((df['Outlet_Temperature_Min_C'] + df['Outlet_Temperature_Max_C'])*0.5 - (df['Homogenization_Temperature_Max_C'] + df['Homogenization_Temperature_Min_C']*0.5 ) * 2
+        ))
         
         return df
     
@@ -343,10 +344,10 @@ class YogurtFeatureEngineer:
         ) / (df['fat_total'] + 0.001)
         
         # Homogenization efficiency
-        pressure_effect = (self.process_params['homog_pressure_1'] ** 0.6) * 1.15
+        pressure_effect = (df['Homogenization_Pressure_Primary_Bar'] ** 0.6) * 1.15
         df['fat_globule_size_predicted'] = (
             df['initial_globule_size_weighted'] / pressure_effect *
-            (1 + abs(self.process_params['homog_temp'] - 65) * 0.02)
+            (1 + abs(df['Homogenization_Temperature_Min_C'] - 65) * 0.02)
         )
         
         # Protein particle size factors

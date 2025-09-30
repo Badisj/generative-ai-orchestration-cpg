@@ -60,15 +60,22 @@ logger = logging.getLogger("YogurtML")
 DEFAULT_TARGETS = [
     "pH_evolution",
     "viscosity",
-    "fat_globule_size_um",
-    "color_L_star",
-    "color_a_star",
-    "color_b_star",
-    "yeast_mold_growth_log_CFU",
-    "overall_liking_score",
-    "firmness_N",
-    "syneresis_ml_per_100g",
-    "ph_drift_14days",
+    "fermentation_endpoint",
+    "fat_globule_size",
+    "firmness",
+    "syneresis",
+    "color_L",
+    "color_a",
+    "color_b",
+    "graininess_perception",
+    "lactic_acid_rate",
+    "overall_liking",
+    "purchase_intent",
+    "yeast_mold_growth",
+    "ph_drift_storage",
+    "yield_optimization",
+    "acetaldehyde_formation",
+    "probiotic_viability"
 ]
 
 
@@ -156,7 +163,7 @@ def get_model_spaces(random_state=42):
         ),
 
         "LightGBM": (
-        LGBMRegressor(random_state=random_state, verbose=0),
+        LGBMRegressor(random_state=random_state, verbose=-1),
         {
             "model__n_estimators": (200, 2000),
             "model__learning_rate": (1e-3, 0.5, "log-uniform"),

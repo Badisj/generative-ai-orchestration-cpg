@@ -5,6 +5,111 @@ import warnings
 from typing import Dict, List, Optional
 
 
+
+FEATURES = [
+    'Stabilizer',
+    'SKIMMED_MILK_POWDER',
+    'VITAMIN_A_POWDER',
+    'VITAMIN_D3_POWDER',
+    'AMF',
+    'CULTURE',
+    'RO_Water_SFG',
+    'Past_Milk_Cow_FF',
+    'FROZEN_CREAM',
+    'WHOLE_MILK_POWDER',
+    'Red_Color',
+    'Strawberry_Flavouring',
+    'Sugar_Crystal_ICUMSA_45',
+    'Flavour_Chocolate',
+    'COMPOUND_COCOA',
+    'EMULSIFIER',
+    'Past_Milk_Cow_SKM',
+    'Heat_Temperature_Min_C',
+    'Heat_Temperature_Max_C',
+    'Homogenization_Pressure_Primary_Bar',
+    'Homogenization_Pressure_Secondary_Bar',
+    'Homogenization_Temperature_Min_C',
+    'Homogenization_Temperature_Max_C',
+    'Outlet_Temperature_Min_C',
+    'Outlet_Temperature_Max_C',
+    'Flow_Rate_KL',
+    'protein_total',
+    'casein_equivalent',
+    'whey_equivalent',
+    'casein_whey_ratio',
+    'milk_powder_total',
+    'fresh_milk_total',
+    'fresh_vs_powder_ratio',
+    'protein_source_diversity',
+    'fat_from_AMF',
+    'fat_from_cream',
+    'fat_from_powder',
+    'fat_from_fresh_milk',
+    'fat_total',
+    'added_fat_ratio',
+    'natural_vs_added_fat',
+    'fat_source_diversity',
+    'lactose_natural',
+    'sugar_added',
+    'sugar_total',
+    'added_vs_natural_sugar',
+    'sugar_loading',
+    'fermentable_substrate',
+    'is_strawberry',
+    'is_chocolate',
+    'is_plain',
+    'flavor_intensity_total',
+    'base_color_L',
+    'base_color_a',
+    'base_color_b',
+    'color_L_predicted',
+    'color_a_predicted',
+    'color_b_predicted',
+    'strawberry_harmony',
+    'chocolate_harmony',
+    'strawberry_sugar_interaction',
+    'chocolate_sugar_interaction',
+    'water_added',
+    'water_from_milk',
+    'water_total',
+    'stabilizer_to_protein_ratio',
+    'emulsifier_to_fat_ratio',
+    'texture_modifier_total',
+    'stabilizer_emulsifier_balance',
+    'protein_water_binding',
+    'stabilizer_water_binding',
+    'water_binding_competition',
+    'pasteurization_intensity',
+    'homog_energy_density',
+    'pressure_ratio',
+    'process_energy_total',
+    'initial_globule_size_weighted',
+    'fat_globule_size_predicted',
+    'protein_aggregation_potential',
+    'homog_challenge_index',
+    'particle_uniformity_index',
+    'protein_network_strength',
+    'fat_lubrication_factor',
+    'texture_synergy_score',
+    'culture_substrate_quality',
+    'pH_buffering_capacity',
+    'acidification_potential',
+    'protein_bitterness_potential',
+    'sugar_masking_power',
+    'flavor_masking_power',
+    'taste_balance_score',
+    'emulsion_stability_predictor',
+    'vitamin_A_total',
+    'vitamin_D3_total',
+    'fat_soluble_vitamin_bioavailability',
+    'vitamin_fortification_intensity',
+    'mineral_content_natural',
+    'formulation_complexity',
+    'premium_ingredient_score',
+    'process_optimization_score'
+]
+
+
 class YogurtFeatureEngineer:
     """
     Feature Engineering Pipeline for Yogurt Manufacturing Data
@@ -51,11 +156,11 @@ class YogurtFeatureEngineer:
         self.process_params = {
             'heat_treatment_temp': 93.5,  # °C (midpoint of 92-95°C)
             'heat_treatment_time': 300,   # seconds
-            'homog_pressure_1': 200,      # bar
-            'homog_pressure_2': 45,       # bar
-            'homog_temp': 65.5,           # °C (midpoint of 63-68°C)
+            'Homogenization_Pressure_Primary_Bar': 200,      # bar
+            'Homogenization_Pressure_Secondary_Bar': 45,       # bar
+            'Homogenization_Temperature_Min_C': 65.5,           # °C (midpoint of 63-68°C)
             'outlet_temp_target': 4.0,    # °C
-            'flow_rate': 30               # KL
+            'Flow_Rate_KL': 30               # KL
         }
         
         # Casein:whey ratios for different sources
@@ -65,7 +170,41 @@ class YogurtFeatureEngineer:
             'concentrate': 0.82        # Milk concentrate
         }
         
-    
+    def standardize_column_names(self, df: pd.DataFrame) -> pd.DataFrame:
+        """
+        Standardize column names to match expected format
+        Handles variations in naming conventions
+        """
+        column_mapping = {
+            'VITAMIN A POWDER Palmitate CWS GF': 'VITAMIN_A_POWDER',
+            'VITAMIN D3 POWDER CWS Food Grade': 'VITAMIN_D3_POWDER',
+            'RO Water (SFG)': 'RO_Water_SFG',
+            'Past. Milk Cow FF': 'Past_Milk_Cow_FF',
+            'Past. Milk at 2.4% Fat for Mixing': 'Past_Milk_2_4_Fat',
+            'Past. Milk Cow SKM': 'Past_Milk_Cow_SKM',
+            'Sugar Crystal ICUMSA 45': 'Sugar_Crystal_ICUMSA_45',
+            'Strawberry Flavouring': 'Strawberry_Flavouring',
+            'Flavour Chocolate': 'Flavour_Chocolate',
+            'COMPOUND COCOA': 'COMPOUND_COCOA',
+            'Solid Milk Conc 100% AUSFIN (SFG)': 'Solid_Milk_Conc_100',
+            'SKIMMED MILK POWDER': 'SKIMMED_MILK_POWDER',
+            'WHOLE MILK POWDER': 'WHOLE_MILK_POWDER',
+            'FROZEN CREAM': 'FROZEN_CREAM',
+            'RO Water': 'RO_Water',
+            'Red Color': 'Red_Color'
+
+        }
+        
+        # Apply column name mapping if columns exist
+        df_renamed = df.rename(columns=column_mapping)
+        
+        # Fill missing ingredient columns with zeros (not used in this batch)
+        expected_columns = list(column_mapping.values()) + ['Stabilizer', 'AMF', 'CULTURE', 'EMULSIFIER']
+        for col in expected_columns:
+            if col not in df_renamed.columns:
+                df_renamed[col] = 0.0
+                
+        return df_renamed
     
     def engineer_protein_features(self, df: pd.DataFrame) -> pd.DataFrame:
         """Engineer protein system features"""
@@ -276,25 +415,25 @@ class YogurtFeatureEngineer:
         
         # Heat treatment features
         df['pasteurization_intensity'] = (
-            (self.process_params['heat_treatment_temp'] - 72) * 
-            self.process_params['heat_treatment_time'] / 15
+            ((df['Heat_Temperature_Min_C'] + df['Heat_Temperature_Max_C'])*0.5 - 72) * 
+            df['Heat_Time_s'] / 15
         )
         
         # Homogenization features
         df['homog_energy_density'] = (
-            (self.process_params['homog_pressure_1'] + self.process_params['homog_pressure_2']) * 
-            self.process_params['flow_rate']
+            (df['Homogenization_Pressure_Primary_Bar'] + df['Homogenization_Pressure_Secondary_Bar']) * 
+            df['Flow_Rate_KL']
         )
         
-        df['pressure_ratio'] = (self.process_params['homog_pressure_1'] / 
-                               self.process_params['homog_pressure_2'])
+        df['pressure_ratio'] = (df['Homogenization_Pressure_Primary_Bar'] / 
+                               df['Homogenization_Pressure_Secondary_Bar'])
         
         # Process efficiency indicators
         df['process_energy_total'] = (
             df['pasteurization_intensity'] * 0.5 +
             df['homog_energy_density'] * 0.0003 +
-            abs(self.process_params['outlet_temp_target'] - self.process_params['homog_temp']) * 2
-        )
+            abs((df['Outlet_Temperature_Min_C'] + df['Outlet_Temperature_Max_C'])*0.5 - (df['Homogenization_Temperature_Max_C'] + df['Homogenization_Temperature_Min_C']*0.5 ) * 2
+        ))
         
         return df
     
@@ -310,10 +449,10 @@ class YogurtFeatureEngineer:
         ) / (df['fat_total'] + 0.001)
         
         # Homogenization efficiency
-        pressure_effect = (self.process_params['homog_pressure_1'] ** 0.6) * 1.15
+        pressure_effect = (df['Homogenization_Pressure_Primary_Bar'] ** 0.6) * 1.15
         df['fat_globule_size_predicted'] = (
             df['initial_globule_size_weighted'] / pressure_effect *
-            (1 + abs(self.process_params['homog_temp'] - 65) * 0.02)
+            (1 + abs(df['Homogenization_Temperature_Min_C'] - 65) * 0.02)
         )
         
         # Protein particle size factors
@@ -479,6 +618,9 @@ class YogurtFeatureEngineer:
             DataFrame with all engineered features
         """
         
+        # Standardize column names
+        df_processed = self.standardize_column_names(df.copy())
+        
         # Apply all feature engineering steps
         df_processed = self.engineer_protein_features(df_processed)
         df_processed = self.engineer_fat_features(df_processed)
@@ -492,22 +634,17 @@ class YogurtFeatureEngineer:
         df_processed = self.add_quality_indicators(df_processed)
         
         return df_processed
-    
-    
-    
-# ----------------------------------
+      
+      
+# -------------------------------------
 # Main entry point for script execution
-# ----------------------------------
+# -------------------------------------
+if __name__ == "__main__":
+    # Load input data
+    plp_df = pd.read_csv(args.input_csv)
+    # Initialize the feature engineer
+    feature_engineer = YogurtFeatureEngineer()
 
-# Initialize the feature engineer
-feature_engineer = YogurtFeatureEngineer()
-
-# Load your data (example)
-parser = argparse.ArgumentParser(description='Yogurt Feature Engineering')
-parser.add_argument('--input_excel', type=str, required=True, default='', help='Path to input CSV file with yogurt data')
-parser.add_argument('--output_csv', type=str, default='./data/Recipe_yogurt_data_generated_with_all_features.csv', help='Path to output CSV file with engineered features')
-args = parser.parse_args()
-df = plp_df.copy()
-
-# Engineer all features
-plp_df = feature_engineer.engineer_all_features(df)
+    # Engineer all features
+    df = plp_df.copy()
+    plp_df = feature_engineer.engineer_all_features(df)[FEATURES]
