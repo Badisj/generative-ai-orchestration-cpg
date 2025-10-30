@@ -1,0 +1,16 @@
+# --- PDF Processing ---
+pdfplumber==0.11.4
+Pillow==10.4.0
+
+# --- OCR ---
+pytesseract==0.3.13
+# Install system binary separately:
+#   Windows: https://github.com/UB-Mannheim/tesseract/wiki
+
+# --- OpenAI API ---
+openai==1.51.0
+python-dotenv==1.0.1
+
+# --- Optional Utilities ---
+tqdm==4.66.5
+jsonschema==4.23.0
