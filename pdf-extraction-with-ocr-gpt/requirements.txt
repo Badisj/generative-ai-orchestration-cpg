@@ -8,8 +8,8 @@ pytesseract==0.3.13
 #   Windows: https://github.com/UB-Mannheim/tesseract/wiki
 
 # --- OpenAI API ---
-openai==1.51.0
-python-dotenv==1.0.1
+openai>=1.99.5
+python-dotenv
 
 # --- Optional Utilities ---
 tqdm==4.66.5
