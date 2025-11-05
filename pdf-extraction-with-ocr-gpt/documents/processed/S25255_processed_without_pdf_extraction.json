@@ -1,0 +1,77 @@
+{
+  "name": "Citric Acid,Anhydrous,",
+  "description": "Safety Data Sheet for Citric Acid, Anhydrous (100% by weight, CAS 77-92-9). Classified as eye irritant (Category 2A). Soluble in water. Combustible dust hazard noted.",
+  "iupacName": "2-hydroxypropane-1,2,3-tricarboxylic acid",
+  "casNumber": "77-92-9",
+  "recipeNumber": "",
+  "synonym": [
+    "Citric Acid, Anhydrous, ACS",
+    "Citric acid",
+    "Acidum citricum",
+    "1,2,3-Propanetricarboxylic acid"
+  ],
+  "hasAssignedIdentifier": [
+    {
+      "identifier": "77-92-9",
+      "hasIdentifierType": {
+        "id": "dsmatdata:CAS_Number_IDT"
+      }
+    }
+  ],
+  "hasConstituency": null,
+  "hasGrade": [
+    {
+      "id": "dsmatdata:acs_grade"
+    }
+  ],
+  "hasMaterialFunction": [
+    {
+      "id": "dsmatdata:acidityregulator_matfunc"
+    },
+    {
+      "id": "dsmatdata:chelatingagent_matfunc"
+    }
+  ],
+  "hasMaterialType": {
+    "id": "dsmatdata:SourcedMaterial"
+  },
+  "hasSource": {
+    "hasSupplier": {
+      "supplierId": "uuid:6901bbfc-bac6-452c-a1ac-a861655e3150",
+      "supplierName": "Milan Creative Collectibles S.r.l."
+    },
+    "supplierPartNumber": "S25255",
+    "tradeName": "Citric Acid,Anhydrous,"
+  },
+  "groups": [],
+  "hasAlternative": [],
+  "hasFormulationSet": {
+    "hasAppearance": {
+      "val": "White solid"
+    },
+    "hasColorDescription": {
+      "val": "White"
+    },
+    "hasPhysicalForm": {
+      "val": {
+        "id": "dsmatdata:solid_form"
+      }
+    },
+    "hasUsageRestriction": {
+      "val": {
+        "id": "dsmatdata:none_usageRestriction"
+      },
+      "message": ""
+    },
+    "hasUsageStatus": {
+      "val": {
+        "id": "dsmatdata:pilot_usageStatus"
+      }
+    }
+  },
+  "hasSecureCollection": [
+    {
+      "id": "dsmatdata:secure_collection_standard"
+    }
+  ]
+}

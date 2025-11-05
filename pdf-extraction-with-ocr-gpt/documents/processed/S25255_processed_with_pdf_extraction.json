@@ -1,0 +1,107 @@
+{
+  "name": "Citric Acid, Anhydrous",
+  "description": "Citric Acid, Anhydrous is a white solid, odorless, and soluble in water. It is classified as an irritant, causing serious eye irritation. It is used in various applications and is readily degradable in the environment.",
+  "iupacName": "2-Hydroxypropane-1,2,3-tricarboxylic acid",
+  "casNumber": "77-92-9",
+  "recipeNumber": "",
+  "synonym": [
+    "Citric Acid",
+    "2-Hydroxy-1,2,3-propanetricarboxylic acid",
+    "3-Hydroxytricarballylic acid",
+    "Stabilizer E330"
+  ],
+  "hasAssignedIdentifier": [
+    {
+      "identifier": "77-92-9",
+      "hasIdentifierType": {
+        "id": "dsmatdata:CAS_Number_IDT"
+      }
+    }
+  ],
+  "hasConstituency": {},
+  "hasGrade": [
+    {
+      "id": "dsmatdata:acs_grade"
+    }
+  ],
+  "hasMaterialFunction": [
+    {
+      "id": "dsmatdata:acidityregulator_matfunc"
+    },
+    {
+      "id": "dsmatdata:chelatingagent_matfunc"
+    },
+    {
+      "id": "dsmatdata:bufferingagent_matfunc"
+    }
+  ],
+  "hasMaterialType": {
+    "id": "dsmatdata:SourcedMaterial"
+  },
+  "hasSource": {
+    "hasSupplier": {
+      "supplierId": "uuid:6901bbfc-bac6-452c-a1ac-a861655e3150",
+      "supplierName": "Milan Creative Collectibles S.r.l."
+    },
+    "supplierPartNumber": "S25255",
+    "tradeName": "Citric Acid, Anhydrous"
+  },
+  "groups": [],
+  "hasAlternative": [],
+  "hasFormulationSet": {
+    "hasAppearance": {
+      "val": "White solid"
+    },
+    "hasAqueousSolubility": {
+      "val": 1.0
+    },
+    "hasBoilingPoint": {
+      "val": null
+    },
+    "hasColorDescription": {
+      "val": "White"
+    },
+    "hasDensity": {
+      "val": null
+    },
+    "hasDynamicViscosity": {
+      "val": null
+    },
+    "hasFlashPoint": {
+      "val": null
+    },
+    "hasMeltingPoint": {
+      "val": null
+    },
+    "hasPhysicalForm": {
+      "val": {
+        "id": "dsmatdata:solid_form"
+      }
+    },
+    "hasSpecificGravity": {
+      "val": null
+    },
+    "hasStandardCost": {
+      "val": null
+    },
+    "hasUsageRestriction": {
+      "val": {
+        "id": "dsmatdata:none_usageRestriction"
+      },
+      "message": "No specific usage restrictions mentioned."
+    },
+    "hasUsageStatus": {
+      "val": {
+        "id": "dsmatdata:pilot_usageStatus"
+      }
+    },
+    "hasVaporPressure": {
+      "val": null
+    }
+  },
+  "hasSecureCollection": [
+    {
+      "id": "dsmatdata:secure_collection_standard"
+    }
+  ]
+}
