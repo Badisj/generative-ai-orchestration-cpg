@@ -120,9 +120,3 @@ python ./scripts/material_information_with_pdf_extraction.py --pdf_path ./docume
 1. Replace hard-coded env key handling with a robust loader and add `.env.example` to the repo.
 2. Add unit/integration tests and a small PDF fixture to validate `extract_text_with_ocr` behavior.
 3. Add `jsonschema` validation against the embedded schema after `json.loads` to detect model drift.
-
----
-
-If you'd like, I can implement one of the suggested improvements (add `.env.example` and replace the hard-coded key,
-or add a pytest that validates OCR + extraction). Tell me which and I will make the changes and run the corresponding
-quick checks.
