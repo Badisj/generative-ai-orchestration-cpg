@@ -4,6 +4,7 @@ import tempfile
 import os
 import openai
 import json
+import subprocess
 
 from PIL import Image
 from dotenv import load_dotenv
@@ -14,6 +15,21 @@ from argparse import ArgumentParser
 # ====================================================
 load_dotenv('./.env')
 openai.api_key = os.getenv("OPENAI_API_KEY")
+
+
+# ====================================================
+# 1️⃣  Parse arguments function
+# ====================================================
+def parse_arguments():
+    parser = ArgumentParser(description="Extract structured material data from PDF datasheets using GPT.")
+    parser.add_argument("--supplier_name", type=str, default="Milan Creative Collectibles S.r.l.")
+    parser.add_argument("--supplier_id", type=str, default="uuid:6901bbfc-bac6-452c-a1ac-a861655e3150")
+    parser.add_argument("--usage", type=str, default="Pilot", choices=["Pilot", "Production", "Development"])
+    parser.add_argument("--usage_id", type=str, default="dsmatdata:pilot_usageStatus", choices=["dsmatdata:pilot_usageStatus", "dsmatdata:production_usageStatus", "dsmatdata:development_usageStatus"])
+    parser.add_argument("--usage_restriction", type=str, default="dsmatdata:none_usageRestriction", choices=["dsmatdata:blockForNew_usageRestriction", "dsmatdata:blockForAll_usageRestriction", "dsmatdata:warning_usageRestriction", "dsmatdata:none_usageRestriction"])
+    parser.add_argument("--pdf_path", type=str, default="./documents/S25255.pdf", help="Path to the input PDF file.")
+    parser.add_argument("--system_prompt_path", type=str, default="./prompts/material_extraction_system_prompt.txt")
+    return parser.parse_args()
 
 
 # ====================================================
@@ -39,17 +55,21 @@ def extract_text_with_ocr(pdf_path):
 
 
 # ====================================================
-# 2️⃣ Parse arguments function
+# 2️⃣ Read system prompt from file and store in variable
 # ====================================================
-def parse_arguments():
-    parser = ArgumentParser(description="Extract structured material data from PDF datasheets using GPT.")
-    parser.add_argument("--supplier_name", type=str, default="Milan Creative Collectibles S.r.l.")
-    parser.add_argument("--supplier_id", type=str, default="uuid:6901bbfc-bac6-452c-a1ac-a861655e3150")
-    parser.add_argument("--usage", type=str, default="Pilot", choices=["Pilot", "Production", "Development"])
-    parser.add_argument("--usage_id", type=str, default="dsmatdata:pilot_usageStatus", choices=["dsmatdata:pilot_usageStatus", "dsmatdata:production_usageStatus", "dsmatdata:development_usageStatus"])
-    parser.add_argument("--usage_restriction", type=str, default="dsmatdata:none_usageRestriction", choices=["dsmatdata:blockForNew_usageRestriction", "dsmatdata:blockForAll_usageRestriction", "dsmatdata:warning_usageRestriction", "dsmatdata:none_usageRestriction"])
-    parser.add_argument("--pdf_path", type=str, default="./documents/S25255.pdf", help="Path to the input PDF file.")
-    return parser.parse_args()
+def load_system_prompt(prompt_path, args):
+    try:
+      with open(prompt_path, "r", encoding="utf-8") as f:
+          system_prompt = f.read().strip()
+      return system_prompt.format(
+          args.supplier_name,
+          args.supplier_id,
+          args.usage_restriction,
+          args.usage_id
+      )
+    except Exception as e:
+      print(f"System prompt not found in {prompt_path}.")
+      return ""
 
 
 # ====================================================
@@ -101,354 +121,32 @@ def process_pdf(pdf_path, output_json_path):
 if __name__ == "__main__":
     # Parse command-line arguments
     args = parse_arguments()
-    supplier_name = args.supplier_name
-    supplier_id = args.supplier_id
-    usage = args.usage
-    usage_restriction = args.usage_restriction
-    usage_id = args.usage_id
     pdf_path = args.pdf_path
+    system_prompt_path = args.system_prompt_path
 
     print("Using parameters:")
-    print(f" Supplier Name: {supplier_name}")
-    print(f" Supplier ID: {supplier_id}")
-    print(f" Usage: {usage}")
-    print(f" Usage ID: {usage_id}")
-    print(f" Usage Restriction: {usage_restriction}")
-    print(f" PDF Path: {pdf_path}")
+    print(f" Supplier Name: {args.supplier_name}")
+    print(f" Supplier ID: {args.supplier_id}")
+    print(f" Usage: {args.usage}")
+    print(f" Usage ID: {args.usage_id}")
+    print(f" Usage Restriction: {args.usage_restriction}")
 
-    # Define system and user prompts
-    system_prompt = """
-    You are an expert materials data extraction model.
-    Your job is to analyze a material datasheet (provided as a PDF) and extract *all* structured material data
-    into a predefined JSON schema. Be precise and consistent.
+    print(f"PDF Path: {pdf_path}")
 
-    Follow this JSON structure exactly, keeping the order of fields the same:
-    {{
-      "name": "str",
-      "description": "str",
-      "iupacName": "str",
-      "casNumber": "str",
-      "recipeNumber": "str",
-      "synonym": ["str"],
-      "hasAssignedIdentifier": [
-        {{
-          "identifier": "str",
-          "hasIdentifierType": {{
-            "id": "str"
-          }}
-        }}
-      ],
-      "hasConstituency": {{
-        "id": "str",
-        "hasMixtureRatio": [
-          {{
-            "ratioMaximum": "float",
-            "ratioMinimum": "float",
-            "ratiotarget": "float",
-            "ratioMaximumInclusive": "bool",
-            "ratioMinimumInclusive": "bool",
-            "restOfMixture": "bool",
-            "offLabel": "bool",
-            "primaryConstituent": "bool",
-            "hasActiveMaterialFunction": [
-              {{
-                "id": "str"
-              }}
-            ],
-            "hasRatioSubstance": {{
-              "id": "str"
-            }}
-          }}
-        ]
-      }},
-      "hasGrade": [
-        {{
-          "id": "str"
-        }}
-      ],
-      "hasMaterialFunction": [
-        {{
-          "id": "str"
-        }}
-      ],
-      "hasMaterialType": {{
-        "id": "str"
-      }},
-      "hasSource": {{
-        "hasSupplier": {{
-          "supplierId": "str",
-          "supplierName": "str"
-        }},
-        "supplierPartNumber": "str",
-        "tradeName": "str"
-      }},
-      "groups": [
-        {{
-          "id": "str"
-        }}
-      ],
-      "hasAlternative": [
-        {{
-          "id": "str"
-        }}
-      ],
-      "hasFormulationSet": {{
-        "hasAppearance": {{
-          "val": "str"
-        }},
-        "hasAqueousSolubility": {{
-          "val": "float"
-        }},
-        "hasAutoIgnitionTemperature": {{
-          "val": "float"
-        }},
-        "hasBoilingPoint": {{
-          "val": "float"
-        }},
-        "hasColorDescription": {{
-          "val": "str"
-        }},
-        "hasDensity": {{
-          "val": "float"
-        }},
-        "hasDynamicViscosity": {{
-          "val": "float"
-        }},
-        "hasFlashPoint": {{
-          "val": "float"
-        }},
-        "hasMeltingPoint": {{
-          "val": "float"
-        }},
-        "hasPhysicalForm": {{
-          "val": {{
-            "id": "str"
-          }}
-        }},
-        "hasSpecificGravity": {{
-          "val": "float"
-        }},
-        "hasStandardCost": {{
-          "val": "float"
-        }},
-        "hasUsageRestriction": {{
-          "val": {{
-            "id": "{2}"
-          }},
-          "message": "str"
-        }},
-        "hasUsageStatus": {{
-          "val": {{
-            "id": "{3}"
-          }}
-        }},
-        "hasVaporPressure": {{
-          "val": "float"
-        }}
-      }},
-      "hasSecureCollection": [
-        {{
-          "id": "dsmatdata:secure_collection_standard"
-        }}
-      ]
-    }}
-
-    Rules:
-    - Output must be *strictly valid JSON*.
-    - Do not include any text outside the JSON.
-    - Extract name, description, iupacName, casNumber, and synonyms directly from the datasheet.
-    - If iupacName is not available, provide it from your chemical knowledge.
-    - If no synonyms are extracted from the document, use your chemical knowledge and provide 3-5 synonyms.
-    - Keep recipeNumber empty.
-    - Only include assigned identifier type IDs from the following mapping:
-          {{
-            'REACH Registration Number': 'dsmatdata:REACH_Number_IDT',
-            'Total Materia ID': 'dsmatdata:TotalMateria_IDT',
-            'ATCC': 'dsmatdata:ATCC_IDT',
-            'Compendial Name': 'dsmatdata:Compendial_Name_IDT',
-            'Colour Index Constitution Number': 'dsmatdata:CICN_IDT',
-            'CISPro Number': 'dsmatdata:CISPro_Number_IDT',
-            'MDL Number': 'dsmatdata:MDL_Number_IDT',
-            'FoodChain ID': 'dsmatdata:Food_Chain_IDT',
-            'FDA UNII': 'dsmatdata:FDA_UNII_IDT',
-            'SPOR Substance ID': 'dsmatdata:SPOR_Substance_IDT',
-            'Enterprise Identifier': 'dsmatdata:Enterprise_Identifier_IDT',
-            'CAS Number': 'dsmatdata:CAS_Number_IDT',
-            'EC Number': 'dsmatdata:EC_Number_IDT',
-            'INCI Name': 'dsmatdata:INCI_Name_IDT'
-          }}
-
-    - Keep hasConstituency empty.
-    - Only include grade IDs from the following mapping, default value is "dsmatdata:laboratory_grade":
-          {{
-            "Laboratory": "dsmatdata:laboratory_grade",
-            "Technical": "dsmatdata:technical_grade",
-            "Analytical Research": "dsmatdata:analytical_research_grade",
-            "JP": "dsmatdata:jp_grade",
-            "NF": "dsmatdata:nf_grade",
-            "Purified": "dsmatdata:purified_grade",
-            "USP-NF": "dsmatdata:usp_nf_grade",
-            "GRC": "dsmatdata:grc_grade",
-            "USP": "dsmatdata:usp_grade",
-            "EP (Ph. Eur.)": "dsmatdata:ep_grade",
-            "FCC": "dsmatdata:fcc_grade",
-            "Reagent": "dsmatdata:reagent_grade",
-            "BP": "dsmatdata:bp_grade",
-            "ACS": "dsmatdata:acs_grade"
-          }}
-
-    - Only include material function IDs from the defined mapping:
-          {{
-            "Binder": "dsmatdata:binder_matfunc",
-            "Surface Modifier": "dsmatdata:surfacemodifier_matfunc",
-            "Processing Aid": "dsmatdata:processingaid_matfunc",
-            "Viscosity Decreasing Agent": "dsmatdata:viscositydecreasingagent_matfunc",
-            "Buffering Agent": "dsmatdata:bufferingagent_matfunc",
-            "Skin Conditioning Agent - Miscellaneous": "dsmatdata:skinconditioningagentmiscellaneous_matfunc",
-            "Film Former": "dsmatdata:filmformer_matfunc",
-            "Fluorescent Brightening Agent": "dsmatdata:fluorescentbrighteningagent_matfunc",
-            "Antimicrobial Agent": "dsmatdata:antimicrobialagent_matfunc",
-            "Carrier Agent": "dsmatdata:carrieragent_matfunc",
-            "Stain Remover": "dsmatdata:stainremover_matfunc",
-            "Cosmetic Biocide": "dsmatdata:cosmeticbiocide_matfunc",
-            "Surfactant": "dsmatdata:surfactant_matfunc",
-            "Water Repellant": "dsmatdata:waterrepellant_matfunc",
-            "Active Ingredient": "dsmatdata:activepharmaceuticalingredient_matfunc",
-            "Toner": "dsmatdata:toner_matfunc",
-            "Hueing Dye": "dsmatdata:hueingdye_matfunc",
-            "Brightener": "dsmatdata:brightener_matfunc",
-            "Preservative": "dsmatdata:preservative_matfunc",
-            "Acidity Regulator": "dsmatdata:acidityregulator_matfunc",
-            "Substrate": "dsmatdata:substrate_matfunc",
-            "Cationic Promoter": "dsmatdata:cationicpromoter_matfunc",
-            "Conditioning Agent": "dsmatdata:conditioningagent_matfunc",
-            "Propellant": "dsmatdata:propellant_matfunc",
-            "Adhesive": "dsmatdata:adhesive_matfunc",
-            "Bleaching Agent": "dsmatdata:bleachingagent_matfunc",
-            "Softening Agent": "dsmatdata:softeningagent_matfunc",
-            "Enzyme": "dsmatdata:enzyme_matfunc",
-            "Respiratory Agent": "dsmatdata:respiratoryagent_matfunc",
-            "Sunscreen Agent": "dsmatdata:sunscreenagent_matfunc",
-            "Sweetening Agent": "dsmatdata:sweeteningagent_matfunc",
-            "Antidandruff Agent": "dsmatdata:antidandruffagent_matfunc",
-            "Surfactant - Nonionic": "dsmatdata:surfactantnonionic_matfunc",
-            "Dye Fixing Agent": "dsmatdata:dyefixingagent_matfunc",
-            "Fixative": "dsmatdata:fixative_matfunc",
-            "Tablet Coating Agent": "dsmatdata:tabletcoatingagent_matfunc",
-            "Antiperspirant Agent": "dsmatdata:antiperspirantagent_matfunc",
-            "Ion Exchange Agent": "dsmatdata:ionexchangeagent_matfunc",
-            "Sequestering Agent": "dsmatdata:sequesteringagent_matfunc",
-            "Pigment Dispersant": "dsmatdata:pigmentdispersant_matfunc",
-            "Perfume": "dsmatdata:perfume_matfunc",
-            "pH Adjuster": "dsmatdata:phadjuster_matfunc",
-            "Viscosity Increasing Agent - Aqueous": "dsmatdata:viscosityincreasingagentaqueous_matfunc",
-            "Artificial Nail Builder": "dsmatdata:artificialnailbuilder_matfunc",
-            "External Analgesic": "dsmatdata:externalanalgesic_matfunc",
-            "Biocatalyst": "dsmatdata:biocatalyst_matfunc",
-            "Ultraviolet Light Absorber": "dsmatdata:ultravioletlightabsorber_matfunc",
-            "Water Conditioning Agent": "dsmatdata:waterconditioningagent_matfunc",
-            "Elastomer": "dsmatdata:elastomer_matfunc",
-            "Oral Care Agent": "dsmatdata:oralcareagent_matfunc",
-            "Anticaking Agent": "dsmatdata:anticakingagent_matfunc",
-            "Bulking Agent": "dsmatdata:bulkingagent_matfunc",
-            "Skin Conditioning Agent": "dsmatdata:skinconditioningagent_matfunc",
-            "Colorant": "dsmatdata:colorant_matfunc",
-            "Moisture Barrier": "dsmatdata:moisturebarrier_matfunc",
-            "Hair Colorant": "dsmatdata:haircolorant_matfunc",
-            "Stabilizer": "dsmatdata:stabilizer_matfunc",
-            "Strength Additive": "dsmatdata:strengthadditive_matfunc",
-            "Cooling Agent": "dsmatdata:coolingagent_matfunc",
-            "Gelling Material": "dsmatdata:gellingmaterial_matfunc",
-            "Antifoaming Agent": "dsmatdata:antifoamingagent_matfunc",
-            "Hydrotrope": "dsmatdata:hydrotrope_matfunc",
-            "Slip Modifier": "dsmatdata:slipmodifier_matfunc",
-            "Hair Conditioning Agent": "dsmatdata:hairconditioningagent_matfunc",
-            "Humectant": "dsmatdata:humectant_matfunc",
-            "Fragrance Ingredient": "dsmatdata:fragranceingredient_matfunc",
-            "Surfactant - Amphoteric": "dsmatdata:surfactantamphoteric_matfunc",
-            "Additive": "dsmatdata:additive_matfunc",
-            "Chelating Agent": "dsmatdata:chelatingagent_matfunc",
-            "Fabric Softener": "dsmatdata:fabricsoftener_matfunc",
-            "Protective Coating": "dsmatdata:protectivecoating_matfunc",
-            "Skin Conditioning Agent - Occlusive": "dsmatdata:skinconditioningagentocclusive_matfunc",
-            "Structurant": "dsmatdata:structurant_matfunc",
-            "Wetting Agent": "dsmatdata:wettingagent_matfunc",
-            "Diluent": "dsmatdata:diluent_matfunc",
-            "Coagulant": "dsmatdata:coagulant_matfunc",
-            "Epilating Agent": "dsmatdata:epilatingagent_matfunc",
-            "Anti-Soil Redeposition Agent": "dsmatdata:antisoilredepositionagent_matfunc",
-            "Curing Agent": "dsmatdata:curingagent_matfunc",
-            "Bleaching Activator": "dsmatdata:bleachingactivator_matfunc",
-            "Reducing Agent": "dsmatdata:reducingagent_matfunc",
-            "Molding Material": "dsmatdata:moldingmaterial_matfunc",
-            "Glitter": "dsmatdata:glitter_matfunc",
-            "Surfactant - Foam Booster": "dsmatdata:surfactantfoambooster_matfunc",
-            "Solvent": "dsmatdata:solvent_matfunc",
-            "Denaturant": "dsmatdata:denaturant_matfunc",
-            "Pesticide": "dsmatdata:pesticide_matfunc",
-            "Surfactant - Cationic": "dsmatdata:surfactantcationic_matfunc",
-            "Antiacne Agent": "dsmatdata:antiacneagent_matfunc",
-            "Hydrating Agent": "dsmatdata:hydratingagent_matfunc",
-            "Leavening Agent": "dsmatdata:leaveningagent_matfunc",
-            "Disintegrant": "dsmatdata:disintegrant_matfunc",
-            "Antibacterial Agent": "dsmatdata:antibacterialagent_matfunc",
-            "Soap Base": "dsmatdata:soapbase_matfunc",
-            "Skin Lubricant": "dsmatdata:skinlubricant_matfunc",
-            "Lytic Agent": "dsmatdata:lyticagent_matfunc",
-            "Skin Conditioning Agent - Humectant": "dsmatdata:skinconditioningagenthumectants_matfunc",
-            "Flavoring Agent": "dsmatdata:flavoringagent_matfunc",
-            "Excipient": "dsmatdata:excipient_matfunc",
-            "Antifungal Agent": "dsmatdata:antifungalagent_matfunc"
-        }}
-
-    - Only include material type IDs from the following mapping, default value is "dsmatdata:SourcedMaterial":
-        {{
-          "Experimental": "dsmatdata:ExperimentalMaterial",
-          "Formulated": "dsmatdata:FormulatedMaterial",
-          "Sourced": "dsmatdata:SourcedMaterial",
-          "Unified": "dsmatdata:UnifiedMaterial"
-        }}
-
-    - For sourced materials, set the tradeName to the product name on the datasheet, and use the following supplier name and ID:
-        {{
-          "supplierName": "{0}",
-          "supplierId": "{1}"
-        }}
-
-    - For groups and HasAlternative, keep the fields empty.
-    - For hasFormulationSet, only include fields if data is available on the datasheet.
-    - Only iclude Physical Form IDs from the following mapping:
-        {{
-          "Powder": "dsmatdata:powder_form",
-          "Capsule": "dsmatdata:capsule_form",
-          "Solid": "dsmatdata:solid_form",
-          "Gel": "dsmatdata:gel_form",
-          "Stick": "dsmatdata:stick_form",
-          "Mousse": "dsmatdata:mousse_form",
-          "Paste": "dsmatdata:paste_form",
-          "Lotion": "dsmatdata:lotion_form",
-          "Tablet": "dsmatdata:tablet_form",
-          "Soft Solid": "dsmatdata:soft_solid_form",
-          "Cream": "dsmatdata:cream_form",
-          "Lozenge": "dsmatdata:lozenge_form",
-          "Aerosol": "dsmatdata:aerosol_form",
-          "Spray": "dsmatdata:spray_form",
-          "Liquid": "dsmatdata:liquid_form",
-          "Gas": "dsmatdata:gas_form",
-          "Foam": "dsmatdata:foam_form"
-        }}
-      
-    - For UsageRestriction, set the ID to "{2}". For the message, provide a 1-line explanation if available; otherwise, use an empty string.
-    - For UsageStatus, set the ID to "{3}".
-    - For hasSecureCollection, set the ID to "dsmatdata:secure_collection_standard".
-    - Use true or false for boolean fields.
-    - Use null or [] when data is missing.
-    """.format(supplier_name, supplier_id, usage_restriction, usage_id)
-    with open("./prompts/material_extraction_system_prompt.txt", "w", encoding="utf-8") as f:
-        f.write(system_prompt.strip())
+    # Load system prompt with parameters
+    print(f"System Prompt Path: {system_prompt_path}")
+    system_prompt = load_system_prompt(system_prompt_path, args)
+    print("System prompt loaded.")
 
     # Specify output JSON path
     output_json_path = os.path.join("./documents/processed/", os.path.basename(pdf_path).replace(".pdf", "_processed_with_pdf_extraction.json"))
     
     # Run orchestration
     process_pdf(pdf_path, output_json_path)
+
+    # Generate requirements.txt using pip freeze
+    if not os.path.exists("requirements.txt"):
+        print("Generating requirements.txt...")
+        with open("requirements.txt", "w") as f:
+            subprocess.run(["pip", "freeze"], stdout=f, text=True, check=True)
+        print("✅ requirements.txt generated successfully!")

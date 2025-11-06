@@ -1,0 +1,13 @@
+Using parameters:
+  Supplier Name: Milan Creative Collectibles S.r.l.
+  Supplier ID: uuid:6901bbfc-bac6-452c-a1ac-a861655e3150
+  Usage: Pilot
+  Usage ID: dsmatdata:pilot_usageStatus
+  Usage Restriction: dsmatdata:none_usageRestriction
+PDF Path: ./documents/S25255.pdf
+System Prompt Path: ./prompts/material_extraction_system_prompt.txt
+System prompt loaded.
+Extracting text (including OCR) from: ./documents/S25255.pdf
+Sending text to FM Gateway for structured material extraction...
+Saving output to: ./documents/processed/S25255_processed_with_pdf_extraction_fm_gateway.json
+âœ… Extraction complete.

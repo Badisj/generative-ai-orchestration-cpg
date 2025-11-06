@@ -1,14 +1,14 @@
 {
   "name": "Citric Acid,Anhydrous,",
-  "description": "Safety Data Sheet for Citric Acid, Anhydrous (100% by weight, CAS 77-92-9). Classified as eye irritant (Category 2A). Soluble in water. Combustible dust hazard noted.",
+  "description": "Citric Acid, Anhydrous (100%). White solid, soluble in water. Causes serious eye irritation. (SDS Effective date: 12.14.2014)",
   "iupacName": "2-hydroxypropane-1,2,3-tricarboxylic acid",
   "casNumber": "77-92-9",
   "recipeNumber": "",
   "synonym": [
-    "Citric Acid, Anhydrous, ACS",
-    "Citric acid",
-    "Acidum citricum",
-    "1,2,3-Propanetricarboxylic acid"
+    "Citric acid anhydrous",
+    "2-hydroxypropane-1,2,3-tricarboxylic acid",
+    "E330",
+    "1,2,3-Propanetricarboxylic acid, 2-hydroxy-"
   ],
   "hasAssignedIdentifier": [
     {
@@ -16,12 +16,18 @@
       "hasIdentifierType": {
         "id": "dsmatdata:CAS_Number_IDT"
       }
+    },
+    {
+      "identifier": "Citric Acid, Anhydrous, ACS",
+      "hasIdentifierType": {
+        "id": "dsmatdata:Compendial_Name_IDT"
+      }
     }
   ],
   "hasConstituency": null,
   "hasGrade": [
     {
-      "id": "dsmatdata:acs_grade"
+      "id": "dsmatdata:laboratory_grade"
     }
   ],
   "hasMaterialFunction": [
@@ -30,6 +36,9 @@
     },
     {
       "id": "dsmatdata:chelatingagent_matfunc"
+    },
+    {
+      "id": "dsmatdata:bufferingagent_matfunc"
     }
   ],
   "hasMaterialType": {
