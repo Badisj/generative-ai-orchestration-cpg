@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rag-opensearch"
+version = "0.1.0"
+description = "Async RAG service for scientific formulation and raw material retrieval"
+authors = [{name="Mohamed Badis JAOUANI", email="mohamedbadis.jaouani@3ds.com"}]
+dependencies = [
+    "fastapi==0.111.0",
+    "uvicorn[standard]==0.23.2",
+    "sentence-transformers==2.2.2",
+    "opensearch-py==2.5.0",
+    "langchain==1.0.0",
+    "python-dotenv==1.0.0"
+]
+
+[tool.black]
+line-length = 88
