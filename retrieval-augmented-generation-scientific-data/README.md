@@ -255,17 +255,17 @@ data/raw/
 Example:
 
 ```
-data/raw/
-├── emulsifier_stability.txt
-├── surfactants_behavior.txt
-└── rheology_basics.txt
+tests/example_docs/
+├── document 1.txt
+├── document 2.txt
+└── document 3.txt
 ```
 
 In Jupyter Notebook:
 
 ```python
-from app.ingestion.ingest import ingest_directory
-await ingest_directory("data/raw")
+from app.ingestion.ingest import ingest_texts
+await ingest_texts(docs)
 ```
 
 ---
@@ -297,7 +297,7 @@ print(answer)
 
 ---
 
-# **🧪 Example Text File (use in `/data/raw`)**
+# **🧪 Example Text File (use in `/tests/example_documents`)**
 
 `surfactants_behavior.txt`:
 
