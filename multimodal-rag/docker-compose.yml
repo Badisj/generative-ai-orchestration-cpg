@@ -1,0 +1,98 @@
+# FILE: docker-compose.yml
+# Docker Compose for Multimodal RAG local development
+# Includes OpenSearch and API service
+
+version: '3.8'
+
+services:
+  # ---------------------------------------------------------------------------
+  # OpenSearch Vector Database
+  # ---------------------------------------------------------------------------
+  opensearch:
+    image: opensearchproject/opensearch:2.12.0
+    container_name: multimodal-rag-opensearch
+    environment:
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - OPENSEARCH_JAVA_OPTS=-Xms1g -Xmx1g
+      - plugins.security.disabled=true
+      - DISABLE_INSTALL_DEMO_CONFIG=true
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    volumes:
+      - opensearch-data:/usr/share/opensearch/data
+    ports:
+      - "9200:9200"
+      - "9600:9600"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s http://localhost:9200 | grep -q 'cluster_name'"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - rag-network
+
+  # ---------------------------------------------------------------------------
+  # RAG API Service
+  # ---------------------------------------------------------------------------
+  api:
+    build: .
+    container_name: multimodal-rag-api
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    environment:
+      - OPENSEARCH_HOST=http://opensearch:9200
+      - INDEX_NAME=multimodal_docs
+      - EMBED_MODEL=all-MiniLM-L6-v2
+      - EMBED_DIM=384
+      - LLM_MODEL=gpt-4o-mini
+      - VISION_MODEL=gpt-4o
+      - CHUNK_SIZE=1000
+      - CHUNK_OVERLAP=200
+      - UPLOAD_DIR=/app/data/uploads
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    volumes:
+      - ./app:/app/app
+      - ./data:/app/data
+    ports:
+      - "8000:8000"
+    depends_on:
+      opensearch:
+        condition: service_healthy
+    networks:
+      - rag-network
+
+  # ---------------------------------------------------------------------------
+  # Jupyter Notebook (for testing)
+  # ---------------------------------------------------------------------------
+  notebook:
+    image: jupyter/scipy-notebook:latest
+    container_name: multimodal-rag-notebook
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+      - OPENSEARCH_HOST=http://opensearch:9200
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    volumes:
+      - ./notebooks:/home/jovyan/work
+      - ./app:/home/jovyan/app
+      - ./data:/home/jovyan/data
+    ports:
+      - "8888:8888"
+    depends_on:
+      - opensearch
+      - api
+    networks:
+      - rag-network
+    command: start-notebook.sh --NotebookApp.token=''
+
+volumes:
+  opensearch-data:
+    driver: local
+
+networks:
+  rag-network:
+    driver: bridge
