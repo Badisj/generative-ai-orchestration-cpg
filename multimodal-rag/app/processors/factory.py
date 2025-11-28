@@ -98,6 +98,48 @@ class ProcessorFactory:
         
         return processor.process(file_path)
     
+    
+    def process_folder(self, folder_path: Path) -> List[Document]:
+        """
+        Processes all the files within a folder.
+
+        Parameters
+        ----------
+        folder_path : Path
+            Path to folder.
+
+        Returns
+        -------
+        List[Document]
+            Processed documents.
+        
+        """
+        folder_path = Path(folder_path)
+
+        if not folder_path.exists():
+            raise FileNotFoundError(f"Folder not found: {folder_path}")
+        if not folder_path.is_dir():
+            raise NotADirectoryError(f"Not a directory: {folder_path}")
+
+        documents: List[Document] = []
+
+        for path in folder_path.rglob("*"):
+            if not path.is_file():
+                continue
+
+            if not self.is_supported(path):
+                logger.debug("Skipping unsupported file:", path)
+                continue
+
+            try:
+                logger.info("Processing file in folder:", path)
+                documents.extend(self.process_file(path))
+            except Exception:
+                logger.exception("Failed to process file:", path)
+                # continue processing other files despite individual failures
+
+        return documents
+    
     def is_supported(self, file_path: Path) -> bool:
         """
         Check if a file type is supported.
