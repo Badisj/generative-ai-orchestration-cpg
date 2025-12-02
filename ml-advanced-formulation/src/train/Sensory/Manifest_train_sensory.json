@@ -1,0 +1,71 @@
+[
+
+    {
+        "bucket_name": "belstoragebucket",
+        "prefix": "formulasRDF/processed/lot1/sensory/Taste Rate/data/",
+        "local_path": "taste_train"
+    },
+ 
+    {
+        "bucket_name": "belstoragebucket",
+        "prefix": "formulasRDF/processed/lot1/sensory/Taste Rate/data/",
+        "local_path": "taste_test"
+    },
+
+
+
+    {
+        "bucket_name": "belstoragebucket",
+        "prefix": "formulasRDF/processed/lot1/sensory/Irritancy Rate/data/",
+        "local_path": "irritancy_train"
+    },
+
+    {
+        "bucket_name": "belstoragebucket",
+        "prefix": "formulasRDF/processed/lot1/sensory/Irritancy Rate/data/",
+        "local_path": "irritancy_test"
+    },
+    
+
+
+    {
+        "bucket_name": "belstoragebucket",
+        "prefix": "formulasRDF/processed/lot1/sensory/Texture Rate/data/",
+        "local_path": "texture_train"
+    },
+
+    {
+        "bucket_name": "belstoragebucket",
+        "prefix": "formulasRDF/processed/lot1/sensory/Texture Rate/data/",
+        "local_path": "texture_test"
+    },
+
+
+
+    {
+        "bucket_name": "belstoragebucket",
+        "prefix": "formulasRDF/processed/lot1/sensory/Firmness Rate/data/",
+        "local_path": "firmness_train"
+    },
+
+    {
+        "bucket_name": "belstoragebucket",
+        "prefix": "formulasRDF/processed/lot1/sensory/Firmness Rate/data/",
+        "local_path": "firmness_test"
+    },
+
+
+
+    {
+        "bucket_name": "belstoragebucket",
+        "prefix": "formulasRDF/processed/lot1/sensory/Appearance Rate/data/",
+        "local_path": "appearance_train"
+    },
+
+    {
+        "bucket_name": "belstoragebucket",
+        "prefix": "formulasRDF/processed/lot1/sensory/Appearance Rate/data/",
+        "local_path": "appearance_test"
+    }
+
+]

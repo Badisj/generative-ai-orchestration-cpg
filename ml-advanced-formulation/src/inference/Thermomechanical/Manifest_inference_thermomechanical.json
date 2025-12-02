@@ -1,0 +1,38 @@
+[
+
+    {
+        "bucket_name": "belstoragebucket",
+        "prefix": "formulasRDF/export/Cheese_development_trials_export_pipeline/",
+        "local_path": "TrialRdf"
+    },
+
+    {
+        "bucket_name": "belstoragebucket",
+        "prefix": "formulasRDF/processed/lot1/thermomechanical/L/model/",
+        "local_path": "model_L"
+    },
+
+    {
+        "bucket_name": "belstoragebucket",
+        "prefix": "formulasRDF/processed/lot1/thermomechanical/a/model/",
+        "local_path": "model_a"
+    },
+
+    {
+        "bucket_name": "belstoragebucket",
+        "prefix": "formulasRDF/processed/lot1/thermomechanical/b/model/",
+        "local_path": "model_b"
+    },
+
+    {
+        "bucket_name": "belstoragebucket",
+        "prefix": "formulasRDF/processed/lot1/thermomechanical/D+7/model/",
+        "local_path": "model_D7"
+    },
+
+    {
+        "bucket_name": "belstoragebucket",
+        "prefix": "formulasRDF/processed/lot1/thermomechanical/D+20/model/",
+        "local_path": "model_D20"
+    }
+]

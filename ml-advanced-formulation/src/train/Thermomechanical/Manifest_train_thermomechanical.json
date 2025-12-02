@@ -1,0 +1,71 @@
+[
+
+    {
+        "bucket_name": "belstoragebucket",
+        "prefix": "formulasRDF/processed/lot1/thermomechanical/L/data/",
+        "local_path": "L_train"
+    },
+ 
+    {
+        "bucket_name": "belstoragebucket",
+        "prefix": "formulasRDF/processed/lot1/thermomechanical/L/data/",
+        "local_path": "L_test"
+    },
+
+
+
+    {
+        "bucket_name": "belstoragebucket",
+        "prefix": "formulasRDF/processed/lot1/thermomechanical/D+7/data/",
+        "local_path": "D7_train"
+    },
+
+    {
+        "bucket_name": "belstoragebucket",
+        "prefix": "formulasRDF/processed/lot1/thermomechanical/D+7/data/",
+        "local_path": "D7_test"
+    },
+    
+
+
+    {
+        "bucket_name": "belstoragebucket",
+        "prefix": "formulasRDF/processed/lot1/thermomechanical/D+20/data/",
+        "local_path": "D20_train"
+    },
+
+    {
+        "bucket_name": "belstoragebucket",
+        "prefix": "formulasRDF/processed/lot1/thermomechanical/D+20/data/",
+        "local_path": "D20_test"
+    },
+
+
+
+    {
+        "bucket_name": "belstoragebucket",
+        "prefix": "formulasRDF/processed/lot1/thermomechanical/a/data/",
+        "local_path": "a_train"
+    },
+
+    {
+        "bucket_name": "belstoragebucket",
+        "prefix": "formulasRDF/processed/lot1/thermomechanical/a/data/",
+        "local_path": "a_test"
+    },
+
+
+
+    {
+        "bucket_name": "belstoragebucket",
+        "prefix": "formulasRDF/processed/lot1/thermomechanical/b/data/",
+        "local_path": "b_train"
+    },
+
+    {
+        "bucket_name": "belstoragebucket",
+        "prefix": "formulasRDF/processed/lot1/thermomechanical/b/data/",
+        "local_path": "b_test"
+    }
+
+]

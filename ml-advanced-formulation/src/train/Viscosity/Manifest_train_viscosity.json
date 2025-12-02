@@ -1,0 +1,14 @@
+[
+
+    {
+        "bucket_name": "belstoragebucket",
+        "prefix": "formulasRDF/processed/lot2/viscosity/data",
+        "local_path": "train"
+    },
+    {
+        "bucket_name": "belstoragebucket",
+        "prefix": "formulasRDF/processed/lot2/viscosity/data",
+        "local_path": "test"
+    }
+
+]

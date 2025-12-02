@@ -1,0 +1,14 @@
+[
+
+    {
+        "bucket_name": "belstoragebucket",
+        "prefix": "formulasRDF/export/Cheese_development_trials_export_pipeline/",
+        "local_path": "Processing"
+    },
+    {
+        "bucket_name": "belstoragebucket",
+        "prefix": "formulasRDF/export/Cheese_development_trials_creaming_export_pipeline/",
+        "local_path": "Processing"
+    }
+
+]

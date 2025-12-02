@@ -1,0 +1,38 @@
+[
+
+    {
+        "bucket_name": "belstoragebucket",
+        "prefix": "formulasRDF/export/Cheese_development_trials_export_pipeline/",
+        "local_path": "TrialRdf"
+    },
+
+    {
+        "bucket_name": "belstoragebucket",
+        "prefix": "formulasRDF/processed/lot1/sensory/Taste Rate/model",
+        "local_path": "model_taste"
+    },
+
+    {
+        "bucket_name": "belstoragebucket",
+        "prefix": "formulasRDF/processed/lot1/sensory/Irritancy Rate/model/",
+        "local_path": "model_irritancy"
+    },
+
+    {
+        "bucket_name": "belstoragebucket",
+        "prefix": "formulasRDF/processed/lot1/sensory/Texture Rate/model/",
+        "local_path": "model_texture"
+    },
+
+    {
+        "bucket_name": "belstoragebucket",
+        "prefix": "formulasRDF/processed/lot1/sensory/Firmness Rate/model/",
+        "local_path": "model_firmness"
+    },
+
+    {
+        "bucket_name": "belstoragebucket",
+        "prefix": "formulasRDF/processed/lot1/sensory/Appearance Rate/model/",
+        "local_path": "model_appearance"
+    }
+]
