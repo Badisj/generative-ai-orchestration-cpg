@@ -109,12 +109,3 @@ Check for a `LICENSE` file in the repository root. If none is present, contact t
 ## Contact / Maintainers
 
 Repository owner: `Badisj` (see repository metadata). For questions about the dataset, experiments, or models, open an issue or contact the owner/maintainers directly.
-
----
-
-If you'd like, I can also:
-- add a `requirements.txt` capturing packages used by the notebook,
-- extract a minimal `inference.py` script to demonstrate batch inference against the `models/` directory,
-- or run through the notebook to list any missing dependencies.
-
-If you want any of those, tell me which one and I'll add it.

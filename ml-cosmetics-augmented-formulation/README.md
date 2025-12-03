@@ -59,9 +59,3 @@ Data expectations
 Development notes
 - There are no automated tests or CI configured by default in this repository. Consider adding a `requirements.txt` and a minimal `pytest` suite for reproducibility.
 - Add a `LICENSE` file if you want to publish or share this project publicly.
-
-Contributing
-- If you want me to add a `requirements.txt`, a sample dataset (small), or CI workflow for GitHub Actions, say so and I will create them.
-
-Contact
-- For changes or questions, open an issue or ask the maintainer.

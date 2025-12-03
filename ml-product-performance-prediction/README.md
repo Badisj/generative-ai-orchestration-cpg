@@ -74,5 +74,5 @@ Recommended next improvements
 
 Troubleshooting
 ---------------
-- `Missing target columns`: make sure your CSV contains the names in `target_columns` or run the estimator to synthesize them by importing `estimate_chocolate_targets`.
+- `Missing target columns`: make sure CSV contains the names in `target_columns` or run the estimator to synthesize them by importing `estimate_chocolate_targets`.
 - `No numeric feature columns found`: ensure the CSV includes numeric formulation/process columns; otherwise add preprocessing to convert categorical columns.
