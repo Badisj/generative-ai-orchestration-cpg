@@ -1,0 +1,416 @@
+{
+  "hardness_newtons": {
+    "random_forest": {
+      "model_path": "..\\outputs\\models\\hardness_newtons__random_forest.joblib",
+      "metrics": {
+        "r2": 0.2816309642562852,
+        "mae": 1.9087261658795776,
+        "rmse": 2.4252748646691784
+      }
+    },
+    "grad_boost": {
+      "model_path": "..\\outputs\\models\\hardness_newtons__grad_boost.joblib",
+      "metrics": {
+        "r2": 0.16739029929170357,
+        "mae": 1.9903511517295804,
+        "rmse": 2.6110061625404644
+      }
+    }
+  },
+  "snap_force_newtons": {
+    "random_forest": {
+      "model_path": "..\\outputs\\models\\snap_force_newtons__random_forest.joblib",
+      "metrics": {
+        "r2": -4.463509563827019,
+        "mae": 0.19614679260133644,
+        "rmse": 0.29212859553208137
+      }
+    },
+    "grad_boost": {
+      "model_path": "..\\outputs\\models\\snap_force_newtons__grad_boost.joblib",
+      "metrics": {
+        "r2": -7.200994822626342,
+        "mae": 0.23187974515516158,
+        "rmse": 0.35790806583966467
+      }
+    }
+  },
+  "viscosity_pas": {
+    "random_forest": {
+      "model_path": "..\\outputs\\models\\viscosity_pas__random_forest.joblib",
+      "metrics": {
+        "r2": -0.8222430314083773,
+        "mae": 0.575398977272727,
+        "rmse": 0.7170656486436852
+      }
+    },
+    "grad_boost": {
+      "model_path": "..\\outputs\\models\\viscosity_pas__grad_boost.joblib",
+      "metrics": {
+        "r2": -0.9957397762358906,
+        "mae": 0.635640160714906,
+        "rmse": 0.7504257457036806
+      }
+    }
+  },
+  "particle_size_d50_micron": {
+    "random_forest": {
+      "model_path": "..\\outputs\\models\\particle_size_d50_micron__random_forest.joblib",
+      "metrics": {
+        "r2": -0.5868041282910428,
+        "mae": 1.3274252115308933,
+        "rmse": 1.6211704152543411
+      }
+    },
+    "grad_boost": {
+      "model_path": "..\\outputs\\models\\particle_size_d50_micron__grad_boost.joblib",
+      "metrics": {
+        "r2": -0.7364362045712436,
+        "mae": 1.3791137145503072,
+        "rmse": 1.6958851019431567
+      }
+    }
+  },
+  "color_l_value": {
+    "random_forest": {
+      "model_path": "..\\outputs\\models\\color_l_value__random_forest.joblib",
+      "metrics": {
+        "r2": 0.8251652874341827,
+        "mae": 1.1492172766627367,
+        "rmse": 1.4152377177224058
+      }
+    },
+    "grad_boost": {
+      "model_path": "..\\outputs\\models\\color_l_value__grad_boost.joblib",
+      "metrics": {
+        "r2": 0.8286403481132364,
+        "mae": 1.0799257555906712,
+        "rmse": 1.4011023070575335
+      }
+    }
+  },
+  "color_a_value": {
+    "random_forest": {
+      "model_path": "..\\outputs\\models\\color_a_value__random_forest.joblib",
+      "metrics": {
+        "r2": -0.04778150288674898,
+        "mae": 0.7636969598583216,
+        "rmse": 0.9345607614368778
+      }
+    },
+    "grad_boost": {
+      "model_path": "..\\outputs\\models\\color_a_value__grad_boost.joblib",
+      "metrics": {
+        "r2": -0.3391062982233999,
+        "mae": 0.8697680076269049,
+        "rmse": 1.0565248234267879
+      }
+    }
+  },
+  "color_b_value": {
+    "random_forest": {
+      "model_path": "..\\outputs\\models\\color_b_value__random_forest.joblib",
+      "metrics": {
+        "r2": 0.6823744568415111,
+        "mae": 1.2129190230224323,
+        "rmse": 1.4965407252751317
+      }
+    },
+    "grad_boost": {
+      "model_path": "..\\outputs\\models\\color_b_value__grad_boost.joblib",
+      "metrics": {
+        "r2": 0.6604415684503662,
+        "mae": 1.2343997019381059,
+        "rmse": 1.5473483239461951
+      }
+    }
+  },
+  "gloss_units": {
+    "random_forest": {
+      "model_path": "..\\outputs\\models\\gloss_units__random_forest.joblib",
+      "metrics": {
+        "r2": 0.0,
+        "mae": 0.003272727272725459,
+        "rmse": 0.009400193421603092
+      }
+    },
+    "grad_boost": {
+      "model_path": "..\\outputs\\models\\gloss_units__grad_boost.joblib",
+      "metrics": {
+        "r2": 0.0,
+        "mae": 5.624766856726637e-07,
+        "rmse": 5.624766856726637e-07
+      }
+    }
+  },
+  "sweetness_score": {
+    "random_forest": {
+      "model_path": "..\\outputs\\models\\sweetness_score__random_forest.joblib",
+      "metrics": {
+        "r2": 0.80173198846691,
+        "mae": 0.33089908008657903,
+        "rmse": 0.46574578101724773
+      }
+    },
+    "grad_boost": {
+      "model_path": "..\\outputs\\models\\sweetness_score__grad_boost.joblib",
+      "metrics": {
+        "r2": 0.7356796376568331,
+        "mae": 0.3811864498787708,
+        "rmse": 0.5377592810568338
+      }
+    }
+  },
+  "bitterness_score": {
+    "random_forest": {
+      "model_path": "..\\outputs\\models\\bitterness_score__random_forest.joblib",
+      "metrics": {
+        "r2": 0.9066866315762971,
+        "mae": 0.3101824134199125,
+        "rmse": 0.3944934794829595
+      }
+    },
+    "grad_boost": {
+      "model_path": "..\\outputs\\models\\bitterness_score__grad_boost.joblib",
+      "metrics": {
+        "r2": 0.8687176471378286,
+        "mae": 0.3573987624032717,
+        "rmse": 0.4679194216814074
+      }
+    }
+  },
+  "creaminess_score": {
+    "random_forest": {
+      "model_path": "..\\outputs\\models\\creaminess_score__random_forest.joblib",
+      "metrics": {
+        "r2": 0.8766088329801038,
+        "mae": 0.3056363636363649,
+        "rmse": 0.38621308296657575
+      }
+    },
+    "grad_boost": {
+      "model_path": "..\\outputs\\models\\creaminess_score__grad_boost.joblib",
+      "metrics": {
+        "r2": 0.8644923213169982,
+        "mae": 0.3241910962242978,
+        "rmse": 0.4047313991556641
+      }
+    }
+  },
+  "overall_flavor_balance": {
+    "random_forest": {
+      "model_path": "..\\outputs\\models\\overall_flavor_balance__random_forest.joblib",
+      "metrics": {
+        "r2": 0.026566722367960094,
+        "mae": 0.42965757575757574,
+        "rmse": 0.5537794750346903
+      }
+    },
+    "grad_boost": {
+      "model_path": "..\\outputs\\models\\overall_flavor_balance__grad_boost.joblib",
+      "metrics": {
+        "r2": -0.14941385145891695,
+        "mae": 0.46363069839863597,
+        "rmse": 0.6017581404930902
+      }
+    }
+  },
+  "texture_liking": {
+    "random_forest": {
+      "model_path": "..\\outputs\\models\\texture_liking__random_forest.joblib",
+      "metrics": {
+        "r2": 0.5582434729566692,
+        "mae": 0.378286038961039,
+        "rmse": 0.4603624730243932
+      }
+    },
+    "grad_boost": {
+      "model_path": "..\\outputs\\models\\texture_liking__grad_boost.joblib",
+      "metrics": {
+        "r2": 0.36812922336948606,
+        "mae": 0.4378008911527225,
+        "rmse": 0.5505827009692755
+      }
+    }
+  },
+  "overall_preference": {
+    "random_forest": {
+      "model_path": "..\\outputs\\models\\overall_preference__random_forest.joblib",
+      "metrics": {
+        "r2": 0.06829683714899082,
+        "mae": 0.39654080086580135,
+        "rmse": 0.493607209339246
+      }
+    },
+    "grad_boost": {
+      "model_path": "..\\outputs\\models\\overall_preference__grad_boost.joblib",
+      "metrics": {
+        "r2": 0.07131326809267646,
+        "mae": 0.37081915790356895,
+        "rmse": 0.4928075237764974
+      }
+    }
+  },
+  "fat_bloom_severity": {
+    "random_forest": {
+      "model_path": "..\\outputs\\models\\fat_bloom_severity__random_forest.joblib",
+      "metrics": {
+        "r2": -0.048708098486500484,
+        "mae": 0.41124744195198754,
+        "rmse": 0.581389158875217
+      }
+    },
+    "grad_boost": {
+      "model_path": "..\\outputs\\models\\fat_bloom_severity__grad_boost.joblib",
+      "metrics": {
+        "r2": -0.16816856561532156,
+        "mae": 0.4356867123121525,
+        "rmse": 0.6136099257536914
+      }
+    }
+  },
+  "sugar_bloom_severity": {
+    "random_forest": {
+      "model_path": "..\\outputs\\models\\sugar_bloom_severity__random_forest.joblib",
+      "metrics": {
+        "r2": 0.5803417626816487,
+        "mae": 0.40806719795356144,
+        "rmse": 0.5493066000712077
+      }
+    },
+    "grad_boost": {
+      "model_path": "..\\outputs\\models\\sugar_bloom_severity__grad_boost.joblib",
+      "metrics": {
+        "r2": 0.5127989153898131,
+        "mae": 0.4302087504443404,
+        "rmse": 0.5918628272581147
+      }
+    }
+  },
+  "color_delta_e": {
+    "random_forest": {
+      "model_path": "..\\outputs\\models\\color_delta_e__random_forest.joblib",
+      "metrics": {
+        "r2": 0.27956752416780173,
+        "mae": 0.4948526057654466,
+        "rmse": 0.6570274534329288
+      }
+    },
+    "grad_boost": {
+      "model_path": "..\\outputs\\models\\color_delta_e__grad_boost.joblib",
+      "metrics": {
+        "r2": 0.08729736921669984,
+        "mae": 0.5592532624258776,
+        "rmse": 0.7395227297651924
+      }
+    }
+  },
+  "hardness_change_pct": {
+    "random_forest": {
+      "model_path": "..\\outputs\\models\\hardness_change_pct__random_forest.joblib",
+      "metrics": {
+        "r2": 0.9151488004018121,
+        "mae": 1.1331856503345157,
+        "rmse": 1.6034666510041313
+      }
+    },
+    "grad_boost": {
+      "model_path": "..\\outputs\\models\\hardness_change_pct__grad_boost.joblib",
+      "metrics": {
+        "r2": 0.9342625513299481,
+        "mae": 1.0854785509541955,
+        "rmse": 1.4113585577259533
+      }
+    }
+  },
+  "peroxide_value": {
+    "random_forest": {
+      "model_path": "..\\outputs\\models\\peroxide_value__random_forest.joblib",
+      "metrics": {
+        "r2": -0.8881732015780721,
+        "mae": 0.7134168181818186,
+        "rmse": 1.0723370937365582
+      }
+    },
+    "grad_boost": {
+      "model_path": "..\\outputs\\models\\peroxide_value__grad_boost.joblib",
+      "metrics": {
+        "r2": -0.8836130737486239,
+        "mae": 0.6754863543284844,
+        "rmse": 1.0710414100972145
+      }
+    }
+  },
+  "free_fatty_acids": {
+    "random_forest": {
+      "model_path": "..\\outputs\\models\\free_fatty_acids__random_forest.joblib",
+      "metrics": {
+        "r2": -0.14623254072817127,
+        "mae": 0.5247444286206217,
+        "rmse": 0.6392977069245069
+      }
+    },
+    "grad_boost": {
+      "model_path": "..\\outputs\\models\\free_fatty_acids__grad_boost.joblib",
+      "metrics": {
+        "r2": -0.14001632602495118,
+        "mae": 0.48984454655917437,
+        "rmse": 0.6375618399604523
+      }
+    }
+  },
+  "water_activity": {
+    "random_forest": {
+      "model_path": "..\\outputs\\models\\water_activity__random_forest.joblib",
+      "metrics": {
+        "r2": 0.4520863874350667,
+        "mae": 0.02920298730814651,
+        "rmse": 0.036112999532707225
+      }
+    },
+    "grad_boost": {
+      "model_path": "..\\outputs\\models\\water_activity__grad_boost.joblib",
+      "metrics": {
+        "r2": 0.4797575524212363,
+        "mae": 0.02924874625242495,
+        "rmse": 0.035189282292021125
+      }
+    }
+  },
+  "moisture_content_pct": {
+    "random_forest": {
+      "model_path": "..\\outputs\\models\\moisture_content_pct__random_forest.joblib",
+      "metrics": {
+        "r2": 0.663757321702386,
+        "mae": 0.18623510478158248,
+        "rmse": 0.2231431963041167
+      }
+    },
+    "grad_boost": {
+      "model_path": "..\\outputs\\models\\moisture_content_pct__grad_boost.joblib",
+      "metrics": {
+        "r2": 0.6228131403266963,
+        "mae": 0.19625949992671157,
+        "rmse": 0.23633906263939855
+      }
+    }
+  },
+  "overall_acceptability": {
+    "random_forest": {
+      "model_path": "..\\outputs\\models\\overall_acceptability__random_forest.joblib",
+      "metrics": {
+        "r2": 0.13317966520932734,
+        "mae": 0.523422264856356,
+        "rmse": 0.6318676521425526
+      }
+    },
+    "grad_boost": {
+      "model_path": "..\\outputs\\models\\overall_acceptability__grad_boost.joblib",
+      "metrics": {
+        "r2": -0.16874090363695693,
+        "mae": 0.6058462219936129,
+        "rmse": 0.7337036829085766
+      }
+    }
+  }
+}
