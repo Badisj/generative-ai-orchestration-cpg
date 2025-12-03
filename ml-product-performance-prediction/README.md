@@ -1,15 +1,23 @@
-# ML Product Performance Prediction — Training Targets
+# ML Product Performance Prediction
 
-**Overview**
-- **Description**: This repository contains tools to estimate chocolate product target variables (sensory, physical, stability) and to train machine-learning models (Random Forest and Gradient Boosting) to predict those targets from formulation and process features.
-- **Primary script**: `src/train/train_targets.py` — trains models for each target defined in `src/process/2. Chocolate_target_estimation.py` and saves models + metrics.
+Purpose
+-------
+This project estimates product target variables for chocolate formulations (sensory, physical, and stability targets) and includes tooling to train ML models that predict those targets from formulation and processing features.
 
-**Requirements**
-- **Python**: 3.8+ recommended.
-- **Packages**: Install from `requirements.txt`.
+Repository layout (high level)
+--------------------------------
+- `data/` — input CSVs. Example: `Chocolate_bar_dataset_with_features.csv`.
+- `src/process/2. Chocolate_target_estimation.py` — contains `estimate_chocolate_targets(df)` and the canonical `target_columns` list.
+- `src/train/train_targets.py` — CLI script to train Random Forest and Gradient Boosting models per target and save artifacts.
+- `notebooks/` — notebooks for demo and analysis. Prefer `notebooks/Train_and_Evaluate_Targets_fixed.ipynb` for a robust executable demo.
+- `outputs/` — trained models, metrics, and exported artifacts are written here.
 
-**Installation**
-- **Create venv (Windows PowerShell)**:
+Quick setup
+-----------
+Recommended: create a virtual environment and install dependencies.
+
+PowerShell example:
+
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
@@ -17,47 +25,54 @@ python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 ```
 
-**Usage**
-- **Basic training command (PowerShell)**:
+Train models (CLI)
+------------------
+The training script will:
+- Read `target_columns` from `src/process/2. Chocolate_target_estimation.py`.
+- Load your input CSV and prepare numeric features (drops columns in `target_columns`).
+- Train a Random Forest and a Gradient Boosting model per target (classification for `shelf_life_exceeded`).
+
+Example (PowerShell):
+
 ```powershell
-python -m src.train.train_targets --input data/Chocolate_bar_dataset_with_features.csv --output-dir outputs/models --test-size 0.2 --random-state 42
+python -m src.train.train_targets --input data/Chocolate_bar_dataset_with_features.csv --output-dir outputs/models --test-size 0.20 --random-state 42
 ```
-- **Arguments**:
-  - `--input`: Path to input CSV containing both features and the target columns (required).
-  - `--process-source`: Path to `2. Chocolate_target_estimation.py` (default: `src/process/2. Chocolate_target_estimation.py`). The script reads `target_columns` from this file.
-  - `--output-dir`: Directory where models and `metrics_summary.json` will be saved (default: `outputs/models`).
-  - `--test-size`: Fraction for the test split (default: `0.2`).
-  - `--random-state`: Random seed for reproducibility (default: `42`).
 
-**Input Data Expectations**
-- **Format**: CSV file with one row per formulation.
-- **Features**: Numeric columns (formulation percentages, process parameters, indices). The training script selects numeric columns automatically and drops any columns listed in `target_columns`.
-- **Targets**: The `target_columns` list is defined in `src/process/2. Chocolate_target_estimation.py`. Example targets include `hardness_newtons`, `viscosity_pas`, `overall_preference`, and `shelf_life_exceeded` (binary).
+Key CLI options:
+- `--input` (required): path to input CSV.
+- `--process-source`: path to the process file with `target_columns` (default: `src/process/2. Chocolate_target_estimation.py`).
+- `--output-dir`: output directory for models and metrics (default: `outputs/models`).
+- `--test-size`: test split fraction (default `0.2`).
+- `--random-state`: seed for reproducibility (default `42`).
 
-**Outputs**
-- **Model files**: Saved as Joblib files at `<output-dir>/models/<target_name>__<model_name>.joblib`.
-- **Metrics**: Summary JSON written to `<output-dir>/metrics_summary.json` containing per-target, per-model metrics and saved model paths.
+Outputs produced
+----------------
+- Model artifacts: Joblib files under `outputs/models/models/<target>__<model>.joblib`.
+- Metrics summary: `outputs/models/metrics_summary.json` (per-target & per-model metrics and model paths).
 
-**Modeling Details**
-- **Regression targets**: Models use `RandomForestRegressor` and `GradientBoostingRegressor` with 200 estimators by default.
-- **Classification targets**: Binary targets (e.g., `shelf_life_exceeded`) use `RandomForestClassifier` and `GradientBoostingClassifier`.
-- **Evaluation**: Regression metrics include R², MAE, RMSE. Classification metrics include accuracy, F1 and ROC-AUC (where available).
+Notebooks
+---------
+- `notebooks/Train_and_Evaluate_Targets_fixed.ipynb` is a ready-to-run demo that: loads data, runs the estimator if targets are missing, trains models, and saves metrics. Use it interactively or execute it programmatically.
 
-**Extending & Improvements**
-- **Hyperparameter tuning**: Integrate `GridSearchCV` or `RandomizedSearchCV` for per-target tuning.
-- **Cross-validation**: Replace single train/test split with k-fold CV for more stable metrics.
-- **Feature engineering**: Add domain-specific features, scaling, or PCA in a preprocessing pipeline.
-- **Experiment tracking**: Add MLflow or Weights & Biases to track runs, parameters and artifacts.
+Data expectations
+-----------------
+- Input is a CSV with one row per formulation.
+- The training pipeline uses numeric columns as features. If you have categorical features, encode them (one-hot or ordinal) before running the script or extend the notebook/script to add preprocessing.
 
-**Developer Notes**
-- The script extracts `target_columns` by parsing the AST of `src/process/2. Chocolate_target_estimation.py`. Ensure that file contains a literal list assignment named `target_columns` (the default implementation does).
-- If your dataset uses categorical features, convert or encode them before running the training script (the script currently uses numeric columns only).
+Modeling notes
+--------------
+- Regression targets use `RandomForestRegressor` and `GradientBoostingRegressor`.
+- Binary targets (e.g., `shelf_life_exceeded`) use `RandomForestClassifier` and `GradientBoostingClassifier`.
+- Evaluation: regression (R², MAE, RMSE), classification (accuracy, F1, ROC-AUC when available).
 
-**Troubleshooting**
-- `No numeric feature columns found`: Ensure your CSV includes numeric feature columns and that target columns are present.
-- `Missing target columns`: Confirm the input CSV contains all names listed under `target_columns` in the process file.
+Recommended next improvements
+----------------------------
+- Add per-target hyperparameter tuning (GridSearchCV, RandomizedSearchCV, or Optuna).
+- Replace single train/test split with k-fold cross-validation for robust metrics.
+- Add experiment tracking (MLflow / W&B) to version models and metrics.
+- Create a small inference script / API to load saved models and serve predictions.
 
-**Next steps I can help with**
-- Add `requirements-dev.txt` and CI tests.
-- Implement hyperparameter search and cross-validation.
-- Add a Jupyter notebook demo showing loading models and producing predictions.
+Troubleshooting
+---------------
+- `Missing target columns`: make sure your CSV contains the names in `target_columns` or run the estimator to synthesize them by importing `estimate_chocolate_targets`.
+- `No numeric feature columns found`: ensure the CSV includes numeric formulation/process columns; otherwise add preprocessing to convert categorical columns.
