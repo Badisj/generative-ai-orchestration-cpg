@@ -97,7 +97,7 @@ To get started with this repository:
 
 ## Technologies
 
-- Python 3.x
+- Python 3.14
 - Machine Learning: Scikit-Learn, LightGBM, RandomForest, Gradient Boosting
 - Deep Learning frameworks as needed per project
 - Docker & Docker Compose
