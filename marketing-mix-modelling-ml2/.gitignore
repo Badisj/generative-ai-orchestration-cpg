@@ -1,9 +1,0 @@
-
-            __pycache__/
-            *.pyc
-            .env
-            .vscode/
-            .idea/
-            data/raw/
-            models/
-            
