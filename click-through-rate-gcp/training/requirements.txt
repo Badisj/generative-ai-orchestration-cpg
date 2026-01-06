@@ -1,0 +1,13 @@
+# Dask (latest stable)
+dask[dataframe]==2025.12.0
+
+# Distributed scheduler for Dask
+distributed==2025.12.0
+
+# Parquet support and GCS file system
+pyarrow==22.0.0
+gcsfs==2025.12.0
+
+# Machine learning
+scikit-learn==1.3.2
+joblib==1.3.2
