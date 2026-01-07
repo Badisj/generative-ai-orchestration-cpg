@@ -29,21 +29,27 @@ def main():
 
     # Start local Dask cluster (single-node multi-core)
     logger.info("Initializing Dask cluster...")
-    client = Client()
+    client = Client(
+        n_workers=8,
+        threads_per_worker=1,
+        memory_limit="6GB",
+        processes=True,
+    )
     logger.info(f"Dask cluster info: {client}")
+    logger.info("Dask dashboard: %s", client.dashboard_link)
 
     # Load Parquet dataset from GCS
     logger.info(f"Reading Parquet from {args.data_uri}...")
     start = time.time()
-    df = dd.read_parquet(args.data_uri)
+    df = dd.read_parquet(args.data_uri, engine="pyarrow")
     logger.info(f"Parquet files loaded. Columns: {df.columns.tolist()}")
     logger.info(f"Row count (approx): {df.shape[0].compute()}")
     logger.info(f"Data load time: {time.time() - start:.2f} seconds")
 
     # Split features and target
     start = time.time()
-    X = df.drop(columns=[args.label_col]).compute()
-    y = df[args.label_col].compute()
+    X = df.drop(columns=[args.label_col])
+    y = df[args.label_col]
     logger.info(f"Feature matrix shape: {X.shape}, Target shape: {y.shape}")
     logger.info(f"Data preprocessing time: {time.time() - start:.2f} seconds")
 

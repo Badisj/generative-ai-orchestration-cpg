@@ -4,6 +4,12 @@ dask[dataframe]==2025.12.0
 # Distributed scheduler for Dask
 distributed==2025.12.0
 
+# Dask-ML
+dask-ml==2024.4.4
+
+# Packaging (REQUIRED for dask-glm)
+setuptools>=68
+
 # Parquet support and GCS file system
 pyarrow==22.0.0
 gcsfs==2025.12.0
